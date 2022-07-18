@@ -1,0 +1,6 @@
+# Testing
+# ------------------------------------------------------------------------------
+pytest==6.2.5  # https://github.com/pytest-dev/pytest
+pytest-env==0.6.2  # https://github.com/MobileDynasty/pytest-env
+pytest-asyncio==0.17.2  # https://github.com/pytest-dev/pytest-asyncio
+Faker==11.0.0 # https://github.com/joke2k/faker

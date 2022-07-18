@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  starnavi_project:
+    image: starnavi_project
+    container_name: starnavi_project_app
+    restart: on-failure
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../:/starnavi_project
+    depends_on:
+      - db_project
+
+  db_project:
+    image: postgres:13.5-alpine
+    container_name: starnavi_project_db
+    volumes:
+      - pgdata_project:/var/lib/postgresql/data_project
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=starnavi_project
+
+
+volumes:
+  pgdata_project:
+    name: starnavi_db_project
+    driver: local
