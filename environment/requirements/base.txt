@@ -1,0 +1,14 @@
+# Base
+# ------------------------------------------------------------------------------
+fastapi==0.78.0  # https://github.com/tiangolo/fastapi
+pydantic==1.9.1  # https://github.com/samuelcolvin/pydantic
+uvicorn==0.16.0  # https://github.com/encode/uvicorn
+sqlalchemy==1.4.39  # https://github.com/sqlalchemy/sqlalchemy
+psycopg2-binary==2.8.5  # https://github.com/psycopg/psycopg2
+fastapi-asyncpg==1.0.1  # https://github.com/jordic/fastapi_asyncpg
+fastapi-utils==0.2.1  # https://github.com/dmontagu/fastapi-utils
+alembic==1.7.7  # https://github.com/sqlalchemy/alembic
+requests==2.26.0  # https://github.com/psf/requests
+jinja2==3.0.3  # https://github.com/pallets/jinja
+httpx==0.21.3  # https://github.com/projectdiscovery/httpx
+passlib==1.7.4  # https://github.com/glic3rinu/passlib
