@@ -37,3 +37,21 @@ class AccessDenied(BaseAPIException):
     status_code = status.HTTP_403_FORBIDDEN
     status_name = "ACCESS_DENIED"
     detail = "Access denied"
+
+
+class UserExist(BaseAPIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    status_name = "USER_EXIST"
+    detail = "User exist"
+
+
+class IncorrectData(BaseAPIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    status_name = "INCORRECT_DATA"
+    detail = "Incorrect Data"
+
+
+class RefreshDenied(BaseAPIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    status_name = "REFRESH_DENIED"
+    detail = "Refresh denied"

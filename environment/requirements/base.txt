@@ -12,3 +12,4 @@ requests==2.26.0  # https://github.com/psf/requests
 jinja2==3.0.3  # https://github.com/pallets/jinja
 httpx==0.21.3  # https://github.com/projectdiscovery/httpx
 passlib==1.7.4  # https://github.com/glic3rinu/passlib
+PyJWT==2.4.0  # https://github.com/jpadilla/pyjwt
