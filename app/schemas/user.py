@@ -33,6 +33,14 @@ class UserLogin(BaseModel):
     password: str
 
 
+class UserLastLogin(BaseModel):
+    last_login: datetime
+
+
+class UserLastRequest(BaseModel):
+    last_request: datetime
+
+
 class UserTokens(BaseModel):
     access_token: Optional[str] = None
     refresh_token: Optional[str] = None
@@ -47,6 +55,8 @@ class UserAccessToken(BaseModel):
 
 class UserInDBBase(UserBase):
     id: int
+    last_login: Optional[datetime] = None
+    last_request: Optional[datetime] = None
 
     class Config:
         orm_mode = True
@@ -54,3 +64,14 @@ class UserInDBBase(UserBase):
 
 class User(UserInDBBase):
     pass
+
+
+class UserProfile(BaseModel):
+    id: int
+    nickname: Optional[str] = None
+    email: str
+    last_login: Optional[datetime] = None
+    last_request: Optional[datetime] = None
+
+    class Config:
+        orm_mode = True

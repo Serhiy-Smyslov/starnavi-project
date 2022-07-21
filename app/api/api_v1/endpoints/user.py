@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
@@ -7,7 +9,7 @@ from app.api import deps
 from app.auth.auth import AuthService
 from app.exceptions.api_exceptions import UserExist, NotFound, IncorrectData
 from app.models import User
-from app.schemas import UserTokens, UserLogin, UserAccessToken, UserAuth
+from app.schemas import UserTokens, UserLogin, UserAccessToken, UserAuth, UserLastLogin, UserProfile
 
 router = APIRouter()
 
@@ -20,6 +22,8 @@ async def sing_up(*, db: AsyncSession = Depends(deps.get_db), user_in: UserAuth)
     user_in.password = AuthService.get_hashed_password(user_in.password)
     user = await crud.user.create(db=db, obj_in=user_in)
     tokens = await AuthService.update_user_tokens(db=db, user=user)
+    last_login_in = UserLastLogin(last_login=datetime.utcnow())
+    await crud.user.update(db=db, db_obj=user, obj_in=last_login_in)
     return tokens
 
 
@@ -30,8 +34,23 @@ async def login(*, db: AsyncSession = Depends(deps.get_db), user_in: UserLogin) 
         raise NotFound(detail='The user is not register')
     if not AuthService.verify_password(user_in.password, user.password):
         raise IncorrectData(detail='Incorrect password')
+
     tokens = await AuthService.update_user_tokens(db=db, user=user)
+
+    last_login_in = UserLastLogin(last_login=datetime.utcnow())
+    await crud.user.update(db=db, db_obj=user, obj_in=last_login_in)
+
     return tokens
+
+
+@router.get('/profile/', summary='Get user profile', response_model=UserProfile)
+async def profile(*,
+                  db: AsyncSession = Depends(deps.get_db),
+                  user: User = Depends(deps.is_authorized)) -> UserProfile:
+    user = await crud.user.get(db=db, id=user.id)
+    if not user:
+        raise NotFound(detail='The user is not register')
+    return user
 
 
 @router.post('/logout/', summary='Logout user from the system', status_code=status.HTTP_200_OK)

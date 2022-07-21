@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from fastapi import Depends, Request, Security
@@ -8,6 +9,7 @@ from app import crud
 from app.db.session import SessionLocal
 from app.exceptions.api_exceptions import AccessDenied
 from app.models import User
+from app.schemas import UserLastRequest
 
 authorization_token = APIKeyHeader(name='Authorization', auto_error=False)
 
@@ -31,4 +33,6 @@ async def is_authorized(
     user = await crud.user.get_by_access_token(db=db, access_token=authorization)
     if not user:
         raise AccessDenied()
+    last_login_in = UserLastRequest(last_request=datetime.utcnow())
+    await crud.user.update(db=db, db_obj=user, obj_in=last_login_in)
     return user

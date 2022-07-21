@@ -9,7 +9,10 @@ class User(Base):
     nickname = Column(String, index=True, nullable=True)
     password = Column(String, nullable=False)
 
-    access_token = Column(String, nullable=True)
-    refresh_token = Column(String, nullable=True)
-    access_token_expires = Column(DateTime, nullable=True)
-    refresh_token_expires = Column(DateTime, nullable=True)
+    access_token = Column(String, unique=True, nullable=True)
+    refresh_token = Column(String, unique=True, nullable=True)
+    access_token_expires = Column(DateTime(timezone=True), nullable=True)
+    refresh_token_expires = Column(DateTime(timezone=True), nullable=True)
+
+    last_login = Column(DateTime(timezone=True), nullable=True)
+    last_request = Column(DateTime(timezone=True), nullable=True)

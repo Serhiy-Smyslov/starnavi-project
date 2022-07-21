@@ -17,7 +17,7 @@ class TestUser:
         user_in = UserCreate(email="test@test.com",
                              password="test")
 
-        response = await async_client.post(f"{settings.API_V1_STR}/auth/sign-up/",
+        response = await async_client.post(f"{settings.API_V1_STR}/user/sign-up/",
                                            json=user_in.dict())
         assert response.status_code == 200
 
@@ -30,7 +30,7 @@ class TestUser:
         user = await create_random_user(db=db_session, password=hash_password)
 
         user_in = UserLogin(email=user.email, password=password)
-        response = await async_client.post(f"{settings.API_V1_STR}/auth/login/",
+        response = await async_client.post(f"{settings.API_V1_STR}/user/login/",
                                            json=user_in.dict())
 
         assert response.status_code == 200
@@ -43,7 +43,7 @@ class TestUser:
         user = await create_random_user(db_session)
         headers = {'authorization': user.access_token}
 
-        response = await async_client.post(f"{settings.API_V1_STR}/auth/logout/",
+        response = await async_client.post(f"{settings.API_V1_STR}/user/logout/",
                                            headers=headers)
         assert response.status_code == 200
         assert user.access_token is None
@@ -56,7 +56,7 @@ class TestUser:
         old_token = user.access_token
 
         params = {'refresh_token': user.refresh_token}
-        response = await async_client.post(f"{settings.API_V1_STR}/auth/refresh-token/",
+        response = await async_client.post(f"{settings.API_V1_STR}/user/refresh-token/",
                                            params=params)
 
         assert response.status_code == 200
@@ -64,8 +64,20 @@ class TestUser:
         assert response['access_token'] != old_token
 
         params = {'refresh_token': random_lower_string()}
-        response = await async_client.post(f"{settings.API_V1_STR}/auth/refresh-token/",
+        response = await async_client.post(f"{settings.API_V1_STR}/user/refresh-token/",
                                            params=params)
 
         assert response.status_code == 403
 
+    async def test_profile(self, async_client: AsyncClient, db_session: AsyncSession):
+        user = await create_random_user(db_session)
+        headers = {'authorization': user.access_token}
+
+        response = await async_client.get(f"{settings.API_V1_STR}/user/profile/",
+                                          headers=headers)
+        assert response.status_code == 200
+
+        response = response.json()
+        assert response['id'] == user.id
+        assert response['email'] == user.email
+        assert response['nickname'] == user.nickname

@@ -17,4 +17,4 @@ async def create_random_post(db: AsyncSession, **kwargs) -> models.Post:
     for k, v in kwargs.items():
         setattr(post_in, k, v)
 
-    return await crud.user.create(db=db, obj_in=post_in)
+    return await crud.post.create(db=db, obj_in=post_in)
