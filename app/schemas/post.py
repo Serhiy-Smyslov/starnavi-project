@@ -1,15 +1,15 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
-from app.schemas import User
+from app.schemas import UserProfile
+from app.schemas.like import Like
 
 
 class PostBase(BaseModel):
     title: str
     text: Optional[str] = None
-    creator_id: int
 
 
 class PostUpdate(PostBase):
@@ -17,12 +17,13 @@ class PostUpdate(PostBase):
 
 
 class PostCreate(PostBase):
-    pass
+    creator_id: int
 
 
 class PostInDBBase(PostBase):
     id: int
-    creator: User
+    creator: UserProfile
+    likes: List[Optional[Like]]
     created_at: datetime
     updated_at: Optional[datetime] = None
 
